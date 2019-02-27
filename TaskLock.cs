@@ -45,8 +45,7 @@ namespace Jannesen.Library.Tasks
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public              void                                Dispose()
         {
-            lock(this)
-            {
+            lock(this) {
                 while (_queue.Count > 0) {
                     Entry entry = _queue[0];
                     _queue.RemoveAt(0);
@@ -69,8 +68,7 @@ namespace Jannesen.Library.Tasks
         }
         public              Task<TaskSingletonAutoLeave>        Enter(int timeout, CancellationToken ct)
         {
-            lock(this)
-            {
+            lock(this) {
                 if (ct.IsCancellationRequested)
                    return Task.FromCanceled<TaskSingletonAutoLeave>(ct);
 
@@ -95,8 +93,7 @@ namespace Jannesen.Library.Tasks
 
         public              void                                Leave()
         {
-            lock(this)
-            {
+            lock(this) {
                 while (--_count > 0) {
                     Entry entry = _queue[0];
                     _queue.RemoveAt(0);
@@ -112,8 +109,7 @@ namespace Jannesen.Library.Tasks
 
         private             void                                _timeoutCallback(object state)
         {
-            lock(this)
-            {
+            lock(this) {
                 int     index = _queue.IndexOf((Entry)state);
 
                 if (index >= 0) {
@@ -126,8 +122,7 @@ namespace Jannesen.Library.Tasks
         }
         private             void                                _cancelCallback(object state)
         {
-            lock(this)
-            {
+            lock(this) {
                 int     index = _queue.IndexOf((Entry)state);
 
                 if (index >= 0) {
