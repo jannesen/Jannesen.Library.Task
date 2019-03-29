@@ -46,10 +46,12 @@ namespace Jannesen.Library.Tasks
         public              void                                Dispose()
         {
             lock(this) {
-                while (_queue.Count > 0) {
-                    Entry entry = _queue[0];
-                    _queue.RemoveAt(0);
-                    entry.SetException(new ObjectDisposedException("TaskLock"));
+                if (_queue != null) {
+                    var queue = _queue;
+                    _queue = null;
+                    foreach(var entry in queue) {
+                        entry.SetException(new ObjectDisposedException("TaskLock"));
+                    }
                 }
             }
         }
@@ -69,10 +71,14 @@ namespace Jannesen.Library.Tasks
         public              Task<TaskSingletonAutoLeave>        Enter(int timeout, CancellationToken ct)
         {
             lock(this) {
+                if (_queue == null) {
+                    throw new ObjectDisposedException("TaskLock");
+                }
+
                 if (ct.IsCancellationRequested)
                    return Task.FromCanceled<TaskSingletonAutoLeave>(ct);
 
-                if (_count++ > 0) {
+                if (_count > 0) {
                     var taskCompletion = new TaskCompletionSource<TaskSingletonAutoLeave>();
                     var entry          = new Entry() { TackCompletion = taskCompletion };
 
@@ -86,24 +92,31 @@ namespace Jannesen.Library.Tasks
 
                     return taskCompletion.Task;
                 }
-                else
+                else {
+                    ++_count;
                     return Task.FromResult<TaskSingletonAutoLeave>(new TaskSingletonAutoLeave(this));
+                }
             }
         }
 
         public              void                                Leave()
         {
             lock(this) {
-                while (--_count > 0) {
-                    Entry entry = _queue[0];
-                    _queue.RemoveAt(0);
+                if (_queue != null) {
+                    while (_queue.Count > 0) {
+                        Entry entry = _queue[0];
+                        _queue.RemoveAt(0);
 
-                    if (_queue.Count == 0)
-                        _queue.TrimExcess();
+                        if (_queue.Count == 0) {
+                            _queue.TrimExcess();
+                        }
 
-                    if (entry.TrySetResult(new TaskSingletonAutoLeave(this)))
-                        return;
+                        if (entry.TrySetResult(new TaskSingletonAutoLeave(this)))
+                            return;
+                    }
                 }
+
+                --_count;
             }
         }
 
@@ -116,7 +129,6 @@ namespace Jannesen.Library.Tasks
                     var entry = _queue[index];
                     _queue.RemoveAt(index);
                     entry.SetException(new TimeoutException());
-                    --_count;
                 }
             }
         }
@@ -129,7 +141,6 @@ namespace Jannesen.Library.Tasks
                     var entry = _queue[index];
                     _queue.RemoveAt(index);
                     entry.SetException(new OperationCanceledException());
-                    --_count;
                 }
             }
         }
