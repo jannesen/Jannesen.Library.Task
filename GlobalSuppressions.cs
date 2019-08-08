@@ -4,5 +4,6 @@
 // Project-level suppressions either have no target or are given
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0029:Use coalesce expression", Justification = "<Pending>", Scope = "member", Target = "~M:Jannesen.Library.Windows.Sid.AccountSid(System.String,System.String)~Jannesen.Library.Windows.Sid")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design",        "CA1031:Do not catch general exception types")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability",   "CA2007:Consider calling ConfigureAwait on the awaited task")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style",         "IDE1006:Naming Styles")]

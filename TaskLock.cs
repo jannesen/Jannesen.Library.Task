@@ -42,7 +42,6 @@ namespace Jannesen.Library.Tasks
             _count = 0;
             _queue = new List<Entry>();
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public              void                                Dispose()
         {
             lock(this) {
@@ -146,9 +145,11 @@ namespace Jannesen.Library.Tasks
         }
     }
 
+#pragma warning disable CA1815 
     public struct TaskSingletonAutoLeave: IDisposable
+#pragma warning restore CA1815 
     {
-        private             TaskLock                            _taskLock;
+        private readonly    TaskLock                            _taskLock;
 
         public                                                  TaskSingletonAutoLeave(TaskLock taskLock)
         {
