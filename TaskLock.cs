@@ -145,9 +145,9 @@ namespace Jannesen.Library.Tasks
         }
     }
 
-#pragma warning disable CA1815 
+#pragma warning disable CA1815
     public struct TaskSingletonAutoLeave: IDisposable
-#pragma warning restore CA1815 
+#pragma warning restore CA1815
     {
         private readonly    TaskLock                            _taskLock;
 

@@ -10,8 +10,7 @@ namespace Jannesen.Library.Tasks
         {
             bool    rtn = true;
 
-            using (CancellationTokenSource cts = new CancellationTokenSource())
-            {
+            using (CancellationTokenSource cts = new CancellationTokenSource()) {
                 var timeoutTask = Task.Delay(milliseconds, cts.Token);
 
                 for (int i = 0 ; i < tasks.Length ; ++i) {
