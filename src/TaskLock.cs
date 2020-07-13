@@ -13,6 +13,10 @@ namespace Jannesen.Library.Tasks
             public      Timer                                               Timer;
             public      CancellationTokenRegistration?                      Ctr;
 
+            public                                                          Entry(TaskCompletionSource<TaskSingletonAutoLeave> tackCompletion)
+            {
+                TackCompletion = tackCompletion;
+            }
             public      bool                                                TrySetResult(TaskSingletonAutoLeave rtn)
             {
                 _dispose();
@@ -79,7 +83,7 @@ namespace Jannesen.Library.Tasks
 
                 if (_count > 0) {
                     var taskCompletion = new TaskCompletionSource<TaskSingletonAutoLeave>();
-                    var entry          = new Entry() { TackCompletion = taskCompletion };
+                    var entry          = new Entry(taskCompletion);
 
                     _queue.Add(entry);
 
@@ -122,24 +126,28 @@ namespace Jannesen.Library.Tasks
         private             void                                _timeoutCallback(object state)
         {
             lock(this) {
-                int     index = _queue.IndexOf((Entry)state);
+                if (_queue != null) {
+                    int     index = _queue.IndexOf((Entry)state);
 
-                if (index >= 0) {
-                    var entry = _queue[index];
-                    _queue.RemoveAt(index);
-                    entry.SetException(new TimeoutException());
+                    if (index >= 0) {
+                        var entry = _queue[index];
+                        _queue.RemoveAt(index);
+                        entry.SetException(new TimeoutException());
+                    }
                 }
             }
         }
         private             void                                _cancelCallback(object state)
         {
             lock(this) {
-                int     index = _queue.IndexOf((Entry)state);
+                if (_queue != null) { 
+                    int     index = _queue.IndexOf((Entry)state);
 
-                if (index >= 0) {
-                    var entry = _queue[index];
-                    _queue.RemoveAt(index);
-                    entry.SetException(new OperationCanceledException());
+                    if (index >= 0) {
+                        var entry = _queue[index];
+                        _queue.RemoveAt(index);
+                        entry.SetException(new OperationCanceledException());
+                    }
                 }
             }
         }
