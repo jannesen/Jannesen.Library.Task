@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlTypes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,25 +7,18 @@ namespace Jannesen.Library.Tasks
 {
     public class EventWaitAsync
     {
-        private             bool                        _set;
-        private             TaskCompletionSource<bool>  _waitSource;
-        private readonly    object                      _lockObject;
+        private volatile    bool                        _set;
+        private volatile    TaskCompletionSource<bool>  _waitSource;
 
         public                                          EventWaitAsync()
         {
             _set        = false;
-            _waitSource   = null;
-            _lockObject = new object();
+            _waitSource = null;
         }
         public              void                        Signal()
         {
-            lock(_lockObject) {
-                _set = true;
-
-                if (_waitSource != null) {
-                    _waitSource.TrySetResult(true);
-                }
-            }
+            _set = true;
+            _waitSource?.TrySetResult(true);
         }
         public              Task<Boolean>               WaitAsync()
         {
@@ -40,22 +34,30 @@ namespace Jannesen.Library.Tasks
         }
         public  async       Task<Boolean>               WaitAsync(int timeout, CancellationToken cancellationToken)
         {
-            bool                            lockTaken = false;
             CancellationTokenRegistration?  ctr       = null;
             Timer                           timer     = null;
 
+            // Fast track _set is true just reset and done.
+            if (_set) {
+                _set = false;
+                return true;
+            }
+
+            // timeout is 0 just return false;
+            if (timeout == 0) {
+                return false;
+            }
+
             try {
-                Monitor.Enter(_lockObject, ref lockTaken);
+                var waitSource = new TaskCompletionSource<bool>();
+
+                // Important that _waitSource is set before _set is tested second time or else a loophole exists.
+                _waitSource = waitSource;
 
                 if (_set) {
+                    _set = false;
                     return true;
                 }
-
-                if (timeout == 0) {
-                    return false;
-                }
-
-                _waitSource = new TaskCompletionSource<bool>();
 
                 if (cancellationToken.CanBeCanceled) {
                     ctr   = cancellationToken.Register(_callbackCancellation);
@@ -65,15 +67,16 @@ namespace Jannesen.Library.Tasks
                     timer = new Timer(_callbackTimer, null, timeout, Timeout.Infinite);
                 }
 
-                Monitor.Exit(_lockObject);
-                lockTaken = false;
-
-                return await _waitSource.Task;
+                if (await waitSource.Task) {
+                    _set = false;
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
             finally {
-                if (!lockTaken) {
-                    Monitor.Enter(_lockObject, ref lockTaken);
-                }
+                _waitSource = null;
 
                 if (ctr.HasValue) {
                     ctr.Value.Dispose();
@@ -82,31 +85,16 @@ namespace Jannesen.Library.Tasks
                 if (timer != null) {
                     timer.Dispose();
                 }
-
-                _waitSource = null;
-                _set        = false;
-
-                if (lockTaken) { 
-                    Monitor.Exit(_lockObject);
-                }
             }
         }
 
         private             void                        _callbackCancellation()
         {
-            lock(_lockObject) {
-                if (_waitSource != null) {
-                    _waitSource.TrySetException(new TaskCanceledException());
-                }
-            }
+            _waitSource?.TrySetException(new TaskCanceledException());
         }
         private             void                        _callbackTimer(object _)
         {
-            lock(_lockObject) {
-                if (_waitSource != null) {
-                    _waitSource.TrySetResult(false);
-                }
-            }
+            _waitSource?.TrySetResult(false);
         }
     }
 }
