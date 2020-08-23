@@ -39,7 +39,7 @@ namespace Jannesen.Library.Tasks
 
             TaskCompletionSource<object>    tcs = new TaskCompletionSource<object>();
 
-            using (var x = ct.Register(() => { tcs.SetException(new OperationCanceledException()); })) {
+            using (var x = ct.Register(() => { tcs.SetException(new TaskCanceledException()); })) {
                 for (int i = 0 ; i < tasks.Length ; ++i) {
                     if (tasks[i] != null) { 
                         await Task.WhenAny(tasks[i], tcs.Task);
