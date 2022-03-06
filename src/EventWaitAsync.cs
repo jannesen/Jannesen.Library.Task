@@ -7,18 +7,24 @@ namespace Jannesen.Library.Tasks
 {
     public class EventWaitAsync
     {
+        private readonly    bool                        _autoreset;
         private volatile    bool                        _set;
         private volatile    TaskCompletionSource<bool>  _waitSource;
 
-        public                                          EventWaitAsync()
+        public                                          EventWaitAsync(bool initValue, bool autoReset)
         {
-            _set        = false;
+            _set        = initValue;
+            _autoreset  = autoReset;
             _waitSource = null;
         }
-        public              void                        Signal()
+        public              void                        Set()
         {
             _set = true;
             _waitSource?.TrySetResult(true);
+        }
+        public              void                        Reset()
+        {
+            _set = false;
         }
         public              Task<Boolean>               WaitAsync()
         {
@@ -39,7 +45,9 @@ namespace Jannesen.Library.Tasks
 
             // Fast track _set is true just reset and done.
             if (_set) {
-                _set = false;
+                if (_autoreset) { 
+                    _set = false;
+                }
                 return true;
             }
 
@@ -51,11 +59,18 @@ namespace Jannesen.Library.Tasks
             try {
                 var waitSource = new TaskCompletionSource<bool>();
 
+                if (_waitSource != null) {
+                    throw new InvalidOperationException("EventWaitAsync.WaitAsync already active.");
+                }
+
                 // Important that _waitSource is set before _set is tested second time or else a loophole exists.
                 _waitSource = waitSource;
 
                 if (_set) {
-                    _set = false;
+                    if (_autoreset) { 
+                        _set = false;
+                    }
+
                     return true;
                 }
 
@@ -68,7 +83,9 @@ namespace Jannesen.Library.Tasks
                 }
 
                 if (await waitSource.Task) {
-                    _set = false;
+                    if (_autoreset) { 
+                        _set = false;
+                    }
                     return true;
                 }
                 else {
