@@ -153,7 +153,7 @@ namespace Jannesen.Library.Tasks
         }
     }
 
-#pragma warning disable CA1815
+#pragma warning disable CA1815 // CA1815: Override equals and operator equals on value types
     public struct TaskSingletonAutoLeave: IDisposable
 #pragma warning restore CA1815
     {

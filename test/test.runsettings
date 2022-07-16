@@ -3,7 +3,7 @@
   <RunConfiguration>
     <MaxCpuCount>1</MaxCpuCount>
     <ResultsDirectory>%TEMP%\TestResults</ResultsDirectory>
-    <TargetFrameworkVersion>NetCoreApp,Version=3.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>net48</TargetFrameworkVersion>
     <TargetPlatform>x64</TargetPlatform>
     <TestSessionTimeout>30000</TestSessionTimeout>
   </RunConfiguration>

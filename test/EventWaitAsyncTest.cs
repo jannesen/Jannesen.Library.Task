@@ -17,8 +17,8 @@ namespace Jannesen.Library.Tasks.UnitTest
             var start = DateTime.UtcNow;
 
             try { 
-                var ewa = new EventWaitAsync();
-                ewa.Signal();
+                var ewa = new EventWaitAsync(false, true);
+                ewa.Set();
                 Assert.IsTrue(await ewa.WaitAsync(2000));
                 Assert.IsFalse(await ewa.WaitAsync(2000));
             }
@@ -35,10 +35,10 @@ namespace Jannesen.Library.Tasks.UnitTest
             var start = DateTime.UtcNow;
 
             try { 
-                var ewa = new EventWaitAsync();
+                var ewa = new EventWaitAsync(false, true);
     
                 using (var cts = new CancellationTokenSource(2000)) { 
-                    ewa.Signal();
+                    ewa.Set();
                     await ewa.WaitAsync(cts.Token);
                     await ewa.WaitAsync(cts.Token);
                 }
@@ -54,22 +54,22 @@ namespace Jannesen.Library.Tasks.UnitTest
         [TestMethod]
         public  async   Task        LoopTest()
         {
-            Func<EventWaitAsync,EventWaitAsync, Task> loop = async (EventWaitAsync ewa1, EventWaitAsync ewa2) => {
+            Func<EventWaitAsync,EventWaitAsync, Task> loop = async (EventWaitAsync aewa1, EventWaitAsync aewa2) => {
                 for (int i = 0 ; i < 10 ; ++i) {
-                    Assert.IsTrue(await ewa1.WaitAsync(1000));
+                    Assert.IsTrue(await aewa1.WaitAsync(1000));
                     await Task.Delay(100);
-                    ewa2.Signal();
+                    aewa2.Set();
                 }
             };
 
             Func<EventWaitAsync,Task> starter = async (EventWaitAsync ewa) => {
                 await Task.Delay(100);
-                ewa.Signal();
+                ewa.Set();
             };
 
             var start = DateTime.UtcNow;
-            var ewa1 = new EventWaitAsync();
-            var ewa2 = new EventWaitAsync();
+            var ewa1 = new EventWaitAsync(false, true);
+            var ewa2 = new EventWaitAsync(false, true);
 
             await Task.WhenAll(loop(ewa1, ewa2), loop(ewa2, ewa1), starter(ewa1));
 

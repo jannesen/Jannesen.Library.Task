@@ -8,6 +8,8 @@ namespace Jannesen.Library.Tasks
     {
         public  static async    Task<bool>      WhenAllWithTimeout(int milliseconds, params Task[] tasks)
         {
+            if (tasks == null) throw new ArgumentNullException(nameof(tasks));
+
             var timeoutCompletionSource = new TaskCompletionSource<object>();
             var timeoutTask             = timeoutCompletionSource.Task;
 
