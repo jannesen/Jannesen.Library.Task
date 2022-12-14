@@ -7,7 +7,7 @@ namespace Jannesen.Library.Tasks
 {
     public sealed class TaskLock: IDisposable
     {
-        private class Entry
+        private sealed class Entry
         {
             public      TaskCompletionSource<TaskSingletonAutoLeave>        TackCompletion;
             public      Timer                                               Timer;
