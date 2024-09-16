@@ -2,7 +2,17 @@ root = true
 
 [*.{cs,ttsql,sql,ts,tsx,js,css,scss,json,xml}]
 end_of_line = crlf
-charset = utf-8-bom
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
+
+[*.cs]
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = none
+
+# CA2237: Mark ISerializable types with SerializableAttribute
+dotnet_diagnostic.CA2237.severity = none
