@@ -11,6 +11,15 @@ namespace Jannesen.Library.Tasks
         private readonly    List<TaskCompletionSource<T>>       _waiting;
         private             bool                                _closed;
 
+        public              int                                 Count
+        {
+            get {
+                lock(_queue) {
+                    return _queue.Count;
+                }
+            }
+        }
+
         public                                                  MessageQueue(int capacity)
         {
             _queue      = new Queue<T>(capacity);
