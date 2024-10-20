@@ -75,7 +75,7 @@ namespace Jannesen.Library.Tasks.UnitTest
                 using (await x.Enter()) {
                     var start = DateTime.UtcNow;
 
-                    try { 
+                    try {
                         using (await x.Enter(2000)) {
                             Assert.Fail();
                         }
@@ -97,7 +97,7 @@ namespace Jannesen.Library.Tasks.UnitTest
                     var start = DateTime.UtcNow;
 
                     try {
-                        using (var cts = new CancellationTokenSource(2000)) { 
+                        using (var cts = new CancellationTokenSource(2000)) {
                             using (await x.Enter(cts.Token)) {
                                 Assert.Fail();
                             }

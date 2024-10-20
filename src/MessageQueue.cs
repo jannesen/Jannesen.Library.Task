@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,7 +81,7 @@ namespace Jannesen.Library.Tasks
         }
         public              void                                Close()
         {
-            TaskCompletionSource<T>[]   toStop; 
+            TaskCompletionSource<T>[]   toStop;
             lock(_queue) {
                 _closed = true;
                 toStop = _waiting.ToArray();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -85,7 +85,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             for (int i = 1 ; i < l.Length ; ++i) {
                 lock(l) {
-                    Assert.AreEqual(l[i], 0);                    
+                    Assert.AreEqual(l[i], 0);
                     l[i] = 1;
                 }
                 q.Send(i.ToString());

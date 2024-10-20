@@ -140,7 +140,7 @@ namespace Jannesen.Library.Tasks
         private             void                                _cancelCallback(object state)
         {
             lock(this) {
-                if (_queue != null) { 
+                if (_queue != null) {
                     int     index = _queue.IndexOf((Entry)state);
 
                     if (index >= 0) {

@@ -45,7 +45,7 @@ namespace Jannesen.Library.Tasks
 
             // Fast track _set is true just reset and done.
             if (_set) {
-                if (_autoreset) { 
+                if (_autoreset) {
                     _set = false;
                 }
                 return true;
@@ -67,7 +67,7 @@ namespace Jannesen.Library.Tasks
                 _waitSource = waitSource;
 
                 if (_set) {
-                    if (_autoreset) { 
+                    if (_autoreset) {
                         _set = false;
                     }
 
@@ -83,7 +83,7 @@ namespace Jannesen.Library.Tasks
                 }
 
                 if (await waitSource.Task) {
-                    if (_autoreset) { 
+                    if (_autoreset) {
                         _set = false;
                     }
                     return true;

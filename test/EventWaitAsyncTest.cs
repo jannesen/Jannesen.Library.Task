@@ -16,7 +16,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             var start = DateTime.UtcNow;
 
-            try { 
+            try {
                 var ewa = new EventWaitAsync(false, true);
                 ewa.Set();
                 Assert.IsTrue(await ewa.WaitAsync(2000));
@@ -34,10 +34,10 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             var start = DateTime.UtcNow;
 
-            try { 
+            try {
                 var ewa = new EventWaitAsync(false, true);
-    
-                using (var cts = new CancellationTokenSource(2000)) { 
+
+                using (var cts = new CancellationTokenSource(2000)) {
                     ewa.Set();
                     await ewa.WaitAsync(cts.Token);
                     await ewa.WaitAsync(cts.Token);

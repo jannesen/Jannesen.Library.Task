@@ -43,7 +43,7 @@ namespace Jannesen.Library.Tasks
 
             using (var x = ct.Register(() => { tcs.SetException(new TaskCanceledException()); })) {
                 for (int i = 0 ; i < tasks.Length ; ++i) {
-                    if (tasks[i] != null) { 
+                    if (tasks[i] != null) {
                         await Task.WhenAny(tasks[i], tcs.Task);
                     }
                 }
