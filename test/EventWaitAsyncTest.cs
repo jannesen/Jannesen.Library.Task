@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -54,7 +52,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         [TestMethod]
         public  async   Task        LoopTest()
         {
-            Func<EventWaitAsync,EventWaitAsync, Task> loop = async (EventWaitAsync aewa1, EventWaitAsync aewa2) => {
+            async Task loop(EventWaitAsync aewa1, EventWaitAsync aewa2) {
                 for (var i = 0 ; i < 10 ; ++i) {
                     Assert.IsTrue(await aewa1.WaitAsync(1000));
                     await Task.Delay(100);
@@ -62,7 +60,7 @@ namespace Jannesen.Library.Tasks.UnitTest
                 }
             };
 
-            Func<EventWaitAsync,Task> starter = async (EventWaitAsync ewa) => {
+            async Task starter(EventWaitAsync ewa) {
                 await Task.Delay(100);
                 ewa.Set();
             };

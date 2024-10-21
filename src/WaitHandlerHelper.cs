@@ -45,11 +45,8 @@ namespace Jannesen.Library.Tasks
                 return await tcs.Task;
             }
             finally {
-                if (registeredHandle != null)
-                    registeredHandle.Unregister(null);
-
-                if (tokenRegistration.HasValue)
-                    tokenRegistration.Value.Dispose();
+                registeredHandle?.Unregister(null);
+                tokenRegistration?.Dispose();
             }
         }
     }

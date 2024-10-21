@@ -93,14 +93,8 @@ namespace Jannesen.Library.Tasks
             }
             finally {
                 _waitSource = null;
-
-                if (ctr.HasValue) {
-                    ctr.Value.Dispose();
-                }
-
-                if (timer != null) {
-                    timer.Dispose();
-                }
+                ctr?.Dispose();
+                timer?.Dispose();
             }
         }
 

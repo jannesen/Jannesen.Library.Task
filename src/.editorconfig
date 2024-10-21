@@ -9,8 +9,12 @@ dotnet_diagnostic.CA1849.severity = none
 # CA1711: Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1711.severity = none
 
+# CA1815: Override equals and operator equals on value types
+dotnet_diagnostic.CA1815.severity = none
+
 # CA2002: Do not lock on objects with weak identity
 dotnet_diagnostic.CA2002.severity = none
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = none
+

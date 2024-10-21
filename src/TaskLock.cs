@@ -30,11 +30,8 @@ namespace Jannesen.Library.Tasks
 
             private     void                                                _dispose()
             {
-                if (Timer != null)
-                    Timer.Dispose();
-
-                if (Ctr.HasValue)
-                    Ctr.Value.Dispose();
+                Timer?.Dispose();
+                Ctr?.Dispose();
             }
         }
 
@@ -151,9 +148,7 @@ namespace Jannesen.Library.Tasks
         }
     }
 
-#pragma warning disable CA1815 // CA1815: Override equals and operator equals on value types
-    public struct TaskSingletonAutoLeave: IDisposable
-#pragma warning restore CA1815
+    public readonly struct TaskSingletonAutoLeave: IDisposable
     {
         private readonly    TaskLock                            _taskLock;
 
