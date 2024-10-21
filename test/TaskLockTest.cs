@@ -32,7 +32,7 @@ namespace Jannesen.Library.Tasks.UnitTest
             {
                 var tasks = new Task[64];
 
-                for (int i = 0 ; i < tasks.Length ; ++i) {
+                for (var i = 0 ; i < tasks.Length ; ++i) {
                     tasks[i] = _run(10000);
                 }
 
@@ -43,7 +43,7 @@ namespace Jannesen.Library.Tasks.UnitTest
             }
             public      async   Task            _run(int n)
             {
-                for (int i = 0 ; i < n ; ++i) {
+                for (var i = 0 ; i < n ; ++i) {
                     await _test();
                 }
             }

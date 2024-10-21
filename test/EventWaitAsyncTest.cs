@@ -55,7 +55,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         public  async   Task        LoopTest()
         {
             Func<EventWaitAsync,EventWaitAsync, Task> loop = async (EventWaitAsync aewa1, EventWaitAsync aewa2) => {
-                for (int i = 0 ; i < 10 ; ++i) {
+                for (var i = 0 ; i < 10 ; ++i) {
                     Assert.IsTrue(await aewa1.WaitAsync(1000));
                     await Task.Delay(100);
                     aewa2.Set();

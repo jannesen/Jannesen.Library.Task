@@ -8,11 +8,23 @@ indent_size              = 4
 trim_trailing_whitespace = true
 
 [*.cs]
+# Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = none
+
 # IDE1006: Naming Styles
 #dotnet_diagnostic.IDE1006.severity = none
 
 # Namespace does not match folder structure (IDE0130)
 dotnet_diagnostic.IDE0130.severity = none
 
+# Use primary constructor (IDE0290)
+dotnet_diagnostic.IDE0290.severity = none
+
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = none
+
+# IDE0007: Use explicit type
+dotnet_diagnostic.IDE0007.severity = warning
+csharp_style_var_for_built_in_types =  true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion

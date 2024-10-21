@@ -39,8 +39,8 @@ namespace Jannesen.Library.Tasks
         }
         public  async       Task<Boolean>               WaitAsync(int timeout, CancellationToken cancellationToken)
         {
-            CancellationTokenRegistration?  ctr       = null;
-            Timer?                          timer     = null;
+            var ctr   = (CancellationTokenRegistration?)null;
+            var timer = (Timer?)null;
 
             // Fast track _set is true just reset and done.
             if (_set) {
@@ -74,7 +74,7 @@ namespace Jannesen.Library.Tasks
                 }
 
                 if (cancellationToken.CanBeCanceled) {
-                    ctr   = cancellationToken.Register(_callbackCancellation);
+                    ctr = cancellationToken.Register(_callbackCancellation);
                 }
 
                 if (timeout != Timeout.Infinite) {

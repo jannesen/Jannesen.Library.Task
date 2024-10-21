@@ -105,7 +105,7 @@ namespace Jannesen.Library.Tasks
             lock(this) {
                 if (_queue != null) {
                     while (_queue.Count > 0) {
-                        Entry entry = _queue[0];
+                        var entry = _queue[0];
                         _queue.RemoveAt(0);
 
                         if (_queue.Count == 0) {
@@ -125,7 +125,7 @@ namespace Jannesen.Library.Tasks
         {
             lock(this) {
                 if (_queue != null) {
-                    int     index = _queue.IndexOf((Entry)state!);
+                    var index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];
@@ -139,7 +139,7 @@ namespace Jannesen.Library.Tasks
         {
             lock(this) {
                 if (_queue != null) {
-                    int     index = _queue.IndexOf((Entry)state!);
+                    var index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];

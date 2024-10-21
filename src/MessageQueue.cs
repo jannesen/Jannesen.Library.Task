@@ -29,7 +29,7 @@ namespace Jannesen.Library.Tasks
 
         public              void                                Send(T message)
         {
-            TaskCompletionSource<T?>?   waitTask = null;
+            var waitTask = (TaskCompletionSource<T?>?)null;
 
             lock(_queue) {
                 if (_closed) {
