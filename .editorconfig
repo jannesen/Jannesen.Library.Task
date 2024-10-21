@@ -8,11 +8,11 @@ indent_size              = 4
 trim_trailing_whitespace = true
 
 [*.cs]
-# CA1032: Implement standard exception constructors
-dotnet_diagnostic.CA1032.severity = none
+# IDE1006: Naming Styles
+#dotnet_diagnostic.IDE1006.severity = none
 
-# CA1711: Identifiers should not have incorrect suffix
-dotnet_diagnostic.CA1711.severity = none
+# Namespace does not match folder structure (IDE0130)
+dotnet_diagnostic.IDE0130.severity = none
 
-# CA2237: Mark ISerializable types with SerializableAttribute
-dotnet_diagnostic.CA2237.severity = none
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none

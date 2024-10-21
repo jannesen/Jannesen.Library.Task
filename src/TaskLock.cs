@@ -74,9 +74,7 @@ namespace Jannesen.Library.Tasks
         public              Task<TaskSingletonAutoLeave>        Enter(int timeout, CancellationToken ct)
         {
             lock(this) {
-                if (_queue == null) {
-                    throw new ObjectDisposedException("TaskLock");
-                }
+                ObjectDisposedException.ThrowIf(_queue == null, this);
 
                 if (ct.IsCancellationRequested)
                    return Task.FromCanceled<TaskSingletonAutoLeave>(ct);
