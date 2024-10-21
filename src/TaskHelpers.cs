@@ -6,7 +6,7 @@ namespace Jannesen.Library.Tasks
 {
     public static class TaskHelpers
     {
-        public  static async    Task<bool>      WhenAllWithTimeout(int milliseconds, params Task[] tasks)
+        public  static async    Task<bool>      WhenAllWithTimeout(Task[] tasks, int milliseconds)
         {
             ArgumentNullException.ThrowIfNull(tasks);
 
