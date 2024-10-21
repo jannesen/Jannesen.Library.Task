@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -58,7 +55,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         public  async   Task        _queueTest1_Recieve(MessageQueue<string> q)
         {
             int     i = 1;
-            string  m;
+            string? m;
 
             while ((m = await q.Receive(CancellationToken.None)) != null) {
                 Assert.AreEqual(m, i.ToString());
@@ -98,7 +95,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         }
         public  async   Task        _queueTest2_Recieve(byte[] l, MessageQueue<string> q, byte n)
         {
-            string  m;
+            string? m;
 
             while ((m = await q.Receive(CancellationToken.None)) != null) {
                 var i = Convert.ToInt32(m);

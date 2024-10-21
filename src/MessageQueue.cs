@@ -8,7 +8,7 @@ namespace Jannesen.Library.Tasks
     public sealed class MessageQueue<T> where T: class
     {
         private readonly    Queue<T>                            _queue;
-        private readonly    List<TaskCompletionSource<T>>       _waiting;
+        private readonly    List<TaskCompletionSource<T?>>      _waiting;
         private             bool                                _closed;
 
         public              int                                 Count
@@ -23,13 +23,13 @@ namespace Jannesen.Library.Tasks
         public                                                  MessageQueue(int capacity)
         {
             _queue      = new Queue<T>(capacity);
-            _waiting    = new List<TaskCompletionSource<T>>();
+            _waiting    = new List<TaskCompletionSource<T?>>();
             _closed     = false;
         }
 
         public              void                                Send(T message)
         {
-            TaskCompletionSource<T>     waitTask = null;
+            TaskCompletionSource<T?>?   waitTask = null;
 
             lock(_queue) {
                 if (_closed) {
@@ -51,9 +51,9 @@ namespace Jannesen.Library.Tasks
                 }
             }
         }
-        public      async   Task<T>                             Receive(CancellationToken ct)
+        public      async   Task<T?>                            Receive(CancellationToken ct)
         {
-            TaskCompletionSource<T>     waitTask;
+            TaskCompletionSource<T?>     waitTask;
 
             lock(_queue) {
                 if (_queue.Count > 0) {
@@ -64,7 +64,7 @@ namespace Jannesen.Library.Tasks
                     return null;
                 }
 
-                waitTask = new TaskCompletionSource<T>();
+                waitTask = new TaskCompletionSource<T?>();
                 _waiting.Add(waitTask);
             }
 
@@ -81,7 +81,7 @@ namespace Jannesen.Library.Tasks
         }
         public              void                                Close()
         {
-            TaskCompletionSource<T>[]   toStop;
+            TaskCompletionSource<T?>[]   toStop;
             lock(_queue) {
                 _closed = true;
                 toStop = _waiting.ToArray();

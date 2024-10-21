@@ -10,7 +10,7 @@ namespace Jannesen.Library.Tasks
         private sealed class Entry
         {
             public      TaskCompletionSource<TaskSingletonAutoLeave>        TackCompletion;
-            public      Timer                                               Timer;
+            public      Timer?                                              Timer;
             public      CancellationTokenRegistration?                      Ctr;
 
             public                                                          Entry(TaskCompletionSource<TaskSingletonAutoLeave> tackCompletion)
@@ -39,7 +39,7 @@ namespace Jannesen.Library.Tasks
         }
 
         private             int                                 _count;
-        private             List<Entry>                         _queue;
+        private             List<Entry>?                        _queue;
 
         public                                                  TaskLock()
         {
@@ -121,11 +121,11 @@ namespace Jannesen.Library.Tasks
             }
         }
 
-        private             void                                _timeoutCallback(object state)
+        private             void                                _timeoutCallback(object? state)
         {
             lock(this) {
                 if (_queue != null) {
-                    int     index = _queue.IndexOf((Entry)state);
+                    int     index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];
@@ -135,11 +135,11 @@ namespace Jannesen.Library.Tasks
                 }
             }
         }
-        private             void                                _cancelCallback(object state)
+        private             void                                _cancelCallback(object? state)
         {
             lock(this) {
                 if (_queue != null) {
-                    int     index = _queue.IndexOf((Entry)state);
+                    int     index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];

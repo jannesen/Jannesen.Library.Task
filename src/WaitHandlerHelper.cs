@@ -25,20 +25,20 @@ namespace Jannesen.Library.Tasks
         }
         public      static async        Task<bool>          WaitOneAsync(this WaitHandle handle, int millisecondsTimeout, CancellationToken cancellationToken)
         {
-            RegisteredWaitHandle            registeredHandle  = null;
+            RegisteredWaitHandle?           registeredHandle  = null;
             CancellationTokenRegistration?  tokenRegistration = null;
             TaskCompletionSource<bool>      tcs               = new TaskCompletionSource<bool>();
 
 
             try {
                 registeredHandle  = ThreadPool.RegisterWaitForSingleObject(handle,
-                                                                            (state, timedOut) => ((TaskCompletionSource<bool>)state).TrySetResult(!timedOut),
+                                                                            (state, timedOut) => ((TaskCompletionSource<bool>)state!).TrySetResult(!timedOut),
                                                                             tcs,
                                                                             millisecondsTimeout,
                                                                             true);
 
                 if (cancellationToken.IsCancellationRequested) {
-                    tokenRegistration = cancellationToken.Register(state => ((TaskCompletionSource<bool>)state).TrySetCanceled(),
+                    tokenRegistration = cancellationToken.Register(state => ((TaskCompletionSource<bool>)state!).TrySetCanceled(),
                                                                    tcs);
                 }
 

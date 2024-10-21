@@ -10,7 +10,7 @@ namespace Jannesen.Library.Tasks
         {
             ArgumentNullException.ThrowIfNull(tasks);
 
-            var timeoutCompletionSource = new TaskCompletionSource<object>();
+            var timeoutCompletionSource = new TaskCompletionSource();
             var timeoutTask             = timeoutCompletionSource.Task;
 
             if (milliseconds <= 0) {
@@ -23,7 +23,10 @@ namespace Jannesen.Library.Tasks
                 return true;
             }
 
-            using (var x = new Timer((object state) => { ((TaskCompletionSource<object>)state).TrySetResult(null); }, timeoutCompletionSource, milliseconds, 0)) {
+            using (var x = new Timer((object? state) => {
+                                        ((TaskCompletionSource)state!).TrySetResult();
+                                     },
+                                     timeoutCompletionSource, milliseconds, 0)) {
                 for (int i = 0 ; i < tasks.Length ; ++i) {
                     await Task.WhenAny(tasks[i], timeoutTask);
 
@@ -41,7 +44,9 @@ namespace Jannesen.Library.Tasks
 
             TaskCompletionSource<object>    tcs = new TaskCompletionSource<object>();
 
-            using (var x = ct.Register(() => { tcs.SetException(new TaskCanceledException()); })) {
+            using (var x = ct.Register(() => {
+                                           tcs.SetException(new TaskCanceledException());
+                                       })) {
                 for (int i = 0 ; i < tasks.Length ; ++i) {
                     if (tasks[i] != null) {
                         await Task.WhenAny(tasks[i], tcs.Task);
