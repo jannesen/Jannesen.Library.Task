@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,7 +14,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             var start = DateTime.UtcNow;
 
-            try { 
+            try {
                 var ewa = new EventWaitAsync(false, true);
                 ewa.Set();
                 Assert.IsTrue(await ewa.WaitAsync(2000));
@@ -34,10 +32,10 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             var start = DateTime.UtcNow;
 
-            try { 
+            try {
                 var ewa = new EventWaitAsync(false, true);
-    
-                using (var cts = new CancellationTokenSource(2000)) { 
+
+                using (var cts = new CancellationTokenSource(2000)) {
                     ewa.Set();
                     await ewa.WaitAsync(cts.Token);
                     await ewa.WaitAsync(cts.Token);
@@ -54,15 +52,15 @@ namespace Jannesen.Library.Tasks.UnitTest
         [TestMethod]
         public  async   Task        LoopTest()
         {
-            Func<EventWaitAsync,EventWaitAsync, Task> loop = async (EventWaitAsync aewa1, EventWaitAsync aewa2) => {
-                for (int i = 0 ; i < 10 ; ++i) {
+            async Task loop(EventWaitAsync aewa1, EventWaitAsync aewa2) {
+                for (var i = 0 ; i < 10 ; ++i) {
                     Assert.IsTrue(await aewa1.WaitAsync(1000));
                     await Task.Delay(100);
                     aewa2.Set();
                 }
             };
 
-            Func<EventWaitAsync,Task> starter = async (EventWaitAsync ewa) => {
+            async Task starter(EventWaitAsync ewa) {
                 await Task.Delay(100);
                 ewa.Set();
             };

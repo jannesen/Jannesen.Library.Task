@@ -1,4 +1,4 @@
-﻿# Jannesen.Library.Task
+# Jannesen.Library.Task
 
 Task helper functions.
 
@@ -13,13 +13,13 @@ Task helper functions.
 
     async test() {
         using (await taskLock.Enter()) {
-            // one 1 task active.         
+            // one 1 task active.
         }
     }
 
     async test_with_timeout() {
         using (await taskLock.Enter(1000)) {
-            // one 1 task active.         
+            // one 1 task active.
         }
     }
 ```

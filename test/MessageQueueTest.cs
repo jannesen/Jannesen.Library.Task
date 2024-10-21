@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -46,7 +43,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         }
         public  async   Task        _queueTest1_Send(MessageQueue<string> q)
         {
-            for (int i = 1 ; i < 1000 ; ++i) {
+            for (var i = 1 ; i < 1000 ; ++i) {
                 q.Send(i.ToString());
                 if ((i % 37) == 0) {
                     await Task.Delay(10);
@@ -57,8 +54,8 @@ namespace Jannesen.Library.Tasks.UnitTest
         }
         public  async   Task        _queueTest1_Recieve(MessageQueue<string> q)
         {
-            int     i = 1;
-            string  m;
+            var     i = 1;
+            string? m;
 
             while ((m = await q.Receive(CancellationToken.None)) != null) {
                 Assert.AreEqual(m, i.ToString());
@@ -83,9 +80,9 @@ namespace Jannesen.Library.Tasks.UnitTest
         }
         public  async   Task        _queueTest2_Send(byte[] l, MessageQueue<string> q)
         {
-            for (int i = 1 ; i < l.Length ; ++i) {
+            for (var i = 1 ; i < l.Length ; ++i) {
                 lock(l) {
-                    Assert.AreEqual(l[i], 0);                    
+                    Assert.AreEqual(l[i], 0);
                     l[i] = 1;
                 }
                 q.Send(i.ToString());
@@ -98,7 +95,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         }
         public  async   Task        _queueTest2_Recieve(byte[] l, MessageQueue<string> q, byte n)
         {
-            string  m;
+            string? m;
 
             while ((m = await q.Receive(CancellationToken.None)) != null) {
                 var i = Convert.ToInt32(m);

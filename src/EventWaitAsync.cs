@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlTypes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +8,7 @@ namespace Jannesen.Library.Tasks
     {
         private readonly    bool                        _autoreset;
         private volatile    bool                        _set;
-        private volatile    TaskCompletionSource<bool>  _waitSource;
+        private volatile    TaskCompletionSource<bool>? _waitSource;
 
         public                                          EventWaitAsync(bool initValue, bool autoReset)
         {
@@ -40,12 +39,12 @@ namespace Jannesen.Library.Tasks
         }
         public  async       Task<Boolean>               WaitAsync(int timeout, CancellationToken cancellationToken)
         {
-            CancellationTokenRegistration?  ctr       = null;
-            Timer                           timer     = null;
+            var ctr   = (CancellationTokenRegistration?)null;
+            var timer = (Timer?)null;
 
             // Fast track _set is true just reset and done.
             if (_set) {
-                if (_autoreset) { 
+                if (_autoreset) {
                     _set = false;
                 }
                 return true;
@@ -67,7 +66,7 @@ namespace Jannesen.Library.Tasks
                 _waitSource = waitSource;
 
                 if (_set) {
-                    if (_autoreset) { 
+                    if (_autoreset) {
                         _set = false;
                     }
 
@@ -75,7 +74,7 @@ namespace Jannesen.Library.Tasks
                 }
 
                 if (cancellationToken.CanBeCanceled) {
-                    ctr   = cancellationToken.Register(_callbackCancellation);
+                    ctr = cancellationToken.Register(_callbackCancellation);
                 }
 
                 if (timeout != Timeout.Infinite) {
@@ -83,7 +82,7 @@ namespace Jannesen.Library.Tasks
                 }
 
                 if (await waitSource.Task) {
-                    if (_autoreset) { 
+                    if (_autoreset) {
                         _set = false;
                     }
                     return true;
@@ -94,14 +93,8 @@ namespace Jannesen.Library.Tasks
             }
             finally {
                 _waitSource = null;
-
-                if (ctr.HasValue) {
-                    ctr.Value.Dispose();
-                }
-
-                if (timer != null) {
-                    timer.Dispose();
-                }
+                ctr?.Dispose();
+                timer?.Dispose();
             }
         }
 
@@ -109,7 +102,7 @@ namespace Jannesen.Library.Tasks
         {
             _waitSource?.TrySetException(new TaskCanceledException());
         }
-        private             void                        _callbackTimer(object _)
+        private             void                        _callbackTimer(object? _)
         {
             _waitSource?.TrySetResult(false);
         }

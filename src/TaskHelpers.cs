@@ -6,15 +6,15 @@ namespace Jannesen.Library.Tasks
 {
     public static class TaskHelpers
     {
-        public  static async    Task<bool>      WhenAllWithTimeout(int milliseconds, params Task[] tasks)
+        public  static async    Task<bool>      WhenAllWithTimeout(Task[] tasks, int milliseconds)
         {
-            if (tasks == null) throw new ArgumentNullException(nameof(tasks));
+            ArgumentNullException.ThrowIfNull(tasks);
 
-            var timeoutCompletionSource = new TaskCompletionSource<object>();
+            var timeoutCompletionSource = new TaskCompletionSource();
             var timeoutTask             = timeoutCompletionSource.Task;
 
             if (milliseconds <= 0) {
-                for (int i = 0 ; i < tasks.Length ; ++i) {
+                for (var i = 0 ; i < tasks.Length ; ++i) {
                     if (tasks[i].Status != TaskStatus.Running) {
                         return false;
                     }
@@ -23,8 +23,11 @@ namespace Jannesen.Library.Tasks
                 return true;
             }
 
-            using (var x = new Timer((object state) => { ((TaskCompletionSource<object>)state).TrySetResult(null); }, timeoutCompletionSource, milliseconds, 0)) {
-                for (int i = 0 ; i < tasks.Length ; ++i) {
+            using (var x = new Timer((object? state) => {
+                                        ((TaskCompletionSource)state!).TrySetResult();
+                                     },
+                                     timeoutCompletionSource, milliseconds, 0)) {
+                for (var i = 0 ; i < tasks.Length ; ++i) {
                     await Task.WhenAny(tasks[i], timeoutTask);
 
                     if (timeoutTask.IsCompleted) {
@@ -37,13 +40,15 @@ namespace Jannesen.Library.Tasks
         }
         public  static async    Task            WhenAllWithCancellation(Task[] tasks, CancellationToken ct)
         {
-            if (tasks is null) throw new ArgumentNullException(nameof(tasks));
+            ArgumentNullException.ThrowIfNull(tasks);
 
-            TaskCompletionSource<object>    tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource();
 
-            using (var x = ct.Register(() => { tcs.SetException(new TaskCanceledException()); })) {
-                for (int i = 0 ; i < tasks.Length ; ++i) {
-                    if (tasks[i] != null) { 
+            using (var x = ct.Register(() => {
+                                           tcs.SetException(new TaskCanceledException());
+                                       })) {
+                for (var i = 0 ; i < tasks.Length ; ++i) {
+                    if (tasks[i] != null) {
                         await Task.WhenAny(tasks[i], tcs.Task);
                     }
                 }

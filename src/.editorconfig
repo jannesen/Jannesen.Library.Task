@@ -1,10 +1,16 @@
-
 [*.cs]
-# IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = none
 
-# CA1014: Mark assemblies with CLSCompliant
-dotnet_diagnostic.CA1014.severity = none
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = none
+
+# CA1849: Call async methods when in an async method
+dotnet_diagnostic.CA1849.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = none
+
+# CA1815: Override equals and operator equals on value types
+dotnet_diagnostic.CA1815.severity = none
 
 # CA2002: Do not lock on objects with weak identity
 dotnet_diagnostic.CA2002.severity = none

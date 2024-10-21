@@ -10,7 +10,7 @@ namespace Jannesen.Library.Tasks
         private sealed class Entry
         {
             public      TaskCompletionSource<TaskSingletonAutoLeave>        TackCompletion;
-            public      Timer                                               Timer;
+            public      Timer?                                              Timer;
             public      CancellationTokenRegistration?                      Ctr;
 
             public                                                          Entry(TaskCompletionSource<TaskSingletonAutoLeave> tackCompletion)
@@ -30,16 +30,13 @@ namespace Jannesen.Library.Tasks
 
             private     void                                                _dispose()
             {
-                if (Timer != null)
-                    Timer.Dispose();
-
-                if (Ctr.HasValue)
-                    Ctr.Value.Dispose();
+                Timer?.Dispose();
+                Ctr?.Dispose();
             }
         }
 
         private             int                                 _count;
-        private             List<Entry>                         _queue;
+        private             List<Entry>?                        _queue;
 
         public                                                  TaskLock()
         {
@@ -74,9 +71,7 @@ namespace Jannesen.Library.Tasks
         public              Task<TaskSingletonAutoLeave>        Enter(int timeout, CancellationToken ct)
         {
             lock(this) {
-                if (_queue == null) {
-                    throw new ObjectDisposedException("TaskLock");
-                }
+                ObjectDisposedException.ThrowIf(_queue == null, this);
 
                 if (ct.IsCancellationRequested)
                    return Task.FromCanceled<TaskSingletonAutoLeave>(ct);
@@ -107,7 +102,7 @@ namespace Jannesen.Library.Tasks
             lock(this) {
                 if (_queue != null) {
                     while (_queue.Count > 0) {
-                        Entry entry = _queue[0];
+                        var entry = _queue[0];
                         _queue.RemoveAt(0);
 
                         if (_queue.Count == 0) {
@@ -123,11 +118,11 @@ namespace Jannesen.Library.Tasks
             }
         }
 
-        private             void                                _timeoutCallback(object state)
+        private             void                                _timeoutCallback(object? state)
         {
             lock(this) {
                 if (_queue != null) {
-                    int     index = _queue.IndexOf((Entry)state);
+                    var index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];
@@ -137,11 +132,11 @@ namespace Jannesen.Library.Tasks
                 }
             }
         }
-        private             void                                _cancelCallback(object state)
+        private             void                                _cancelCallback(object? state)
         {
             lock(this) {
-                if (_queue != null) { 
-                    int     index = _queue.IndexOf((Entry)state);
+                if (_queue != null) {
+                    var index = _queue.IndexOf((Entry)state!);
 
                     if (index >= 0) {
                         var entry = _queue[index];
@@ -153,9 +148,7 @@ namespace Jannesen.Library.Tasks
         }
     }
 
-#pragma warning disable CA1815 // CA1815: Override equals and operator equals on value types
-    public struct TaskSingletonAutoLeave: IDisposable
-#pragma warning restore CA1815
+    public readonly struct TaskSingletonAutoLeave: IDisposable
     {
         private readonly    TaskLock                            _taskLock;
 

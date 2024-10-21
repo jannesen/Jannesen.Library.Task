@@ -25,31 +25,28 @@ namespace Jannesen.Library.Tasks
         }
         public      static async        Task<bool>          WaitOneAsync(this WaitHandle handle, int millisecondsTimeout, CancellationToken cancellationToken)
         {
-            RegisteredWaitHandle            registeredHandle  = null;
-            CancellationTokenRegistration?  tokenRegistration = null;
-            TaskCompletionSource<bool>      tcs               = new TaskCompletionSource<bool>();
+            var registeredHandle  = (RegisteredWaitHandle?)null;
+            var tokenRegistration = (CancellationTokenRegistration?)null;
+            var tcs               = new TaskCompletionSource<bool>();
 
 
             try {
                 registeredHandle  = ThreadPool.RegisterWaitForSingleObject(handle,
-                                                                            (state, timedOut) => ((TaskCompletionSource<bool>)state).TrySetResult(!timedOut),
+                                                                            (state, timedOut) => ((TaskCompletionSource<bool>)state!).TrySetResult(!timedOut),
                                                                             tcs,
                                                                             millisecondsTimeout,
                                                                             true);
 
                 if (cancellationToken.IsCancellationRequested) {
-                    tokenRegistration = cancellationToken.Register(state => ((TaskCompletionSource<bool>)state).TrySetCanceled(),
+                    tokenRegistration = cancellationToken.Register(state => ((TaskCompletionSource<bool>)state!).TrySetCanceled(),
                                                                    tcs);
                 }
 
                 return await tcs.Task;
             }
             finally {
-                if (registeredHandle != null)
-                    registeredHandle.Unregister(null);
-
-                if (tokenRegistration.HasValue)
-                    tokenRegistration.Value.Dispose();
+                registeredHandle?.Unregister(null);
+                tokenRegistration?.Dispose();
             }
         }
     }
