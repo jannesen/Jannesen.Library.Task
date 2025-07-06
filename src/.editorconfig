@@ -1,5 +1,13 @@
-[*.cs]
+root = true
 
+[*.{cs,json,xml}]
+end_of_line              = lf
+charset                  = utf-8-bom
+indent_style             = space
+indent_size              = 4
+trim_trailing_whitespace = true
+
+[*.cs]
 # CA1032: Implement standard exception constructors
 dotnet_diagnostic.CA1032.severity = none
 

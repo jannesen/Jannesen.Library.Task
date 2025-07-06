@@ -2,16 +2,16 @@
     <PropertyGroup>
         <RootNamespace>Jannesen.Library.Task</RootNamespace>
         <AssemblyName>Jannesen.Library.Task</AssemblyName>
-        
+
         <OutputType>Library</OutputType>
         <TargetFramework>net9</TargetFramework>
         <InvariantGlobalization>true</InvariantGlobalization>
         <Platforms>AnyCPU</Platforms>
-  
+
         <Nullable>enable</Nullable>
-        
+
         <IsTrimmable>True</IsTrimmable>
-        <IsAotCompatible>True</IsAotCompatible>        
+        <IsAotCompatible>True</IsAotCompatible>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>Jannesen.Library.Task.snk</AssemblyOriginatorKeyFile>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -20,7 +20,7 @@
         <Company>Jannesen B.V.</Company>
         <Version>1.10.00.001</Version>
         <Authors>Peter Jannesen</Authors>
-        <RepositoryUrl>https://github.com/jannesen/Jannesen.Library.Task</RepositoryUrl>        
+        <RepositoryUrl>https://github.com/jannesen/Jannesen.Library.Task</RepositoryUrl>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
