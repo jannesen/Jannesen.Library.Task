@@ -14,14 +14,14 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             var q = new MessageQueue<string>(10);
             q.Send("1");
-            Assert.AreEqual(await q.Receive(CancellationToken.None), "1");
+            Assert.AreEqual("1", await q.Receive(CancellationToken.None));
         }
         [TestMethod]
         public  async   Task        CancelTest()
         {
             var q = new MessageQueue<string>(10);
             q.Send("1");
-            Assert.AreEqual(await q.Receive(CancellationToken.None), "1");
+            Assert.AreEqual("1", await q.Receive(CancellationToken.None));
 
             using (var ct = new CancellationTokenSource(10)) {
                 try {
@@ -65,7 +65,7 @@ namespace Jannesen.Library.Tasks.UnitTest
                 }
             }
 
-            Assert.AreEqual(i, 1000);
+            Assert.AreEqual(1000, i);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace Jannesen.Library.Tasks.UnitTest
         {
             for (var i = 1 ; i < l.Length ; ++i) {
                 lock(l) {
-                    Assert.AreEqual(l[i], 0);
+                    Assert.AreEqual(0, l[i]);
                     l[i] = 1;
                 }
                 q.Send(i.ToString());
@@ -101,7 +101,7 @@ namespace Jannesen.Library.Tasks.UnitTest
                 var i = Convert.ToInt32(m);
 
                 lock(l) {
-                    Assert.AreEqual(l[i], 1);
+                    Assert.AreEqual(1, l[i]);
                     l[i] = n;
                 }
 

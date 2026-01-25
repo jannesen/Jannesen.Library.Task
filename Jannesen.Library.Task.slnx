@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/Jannesen.Library.Task.csproj" />
+  <Project Path="test/Jannesen.Library.Task.UnitTest.csproj" />
+</Solution>
