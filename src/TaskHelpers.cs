@@ -23,7 +23,7 @@ namespace Jannesen.Library.Tasks
                 return true;
             }
 
-            using (var x = new Timer((object? state) => {
+            using (var x = new Timer((state) => {
                                         ((TaskCompletionSource)state!).TrySetResult();
                                      },
                                      timeoutCompletionSource, milliseconds, 0)) {
