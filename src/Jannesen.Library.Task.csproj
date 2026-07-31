@@ -4,7 +4,7 @@
         <AssemblyName>Jannesen.Library.Task</AssemblyName>
 
         <OutputType>Library</OutputType>
-        <TargetFramework>net9</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <InvariantGlobalization>true</InvariantGlobalization>
         <Platforms>AnyCPU</Platforms>
 
@@ -17,7 +17,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
         <Company>Jannesen B.V.</Company>
-        <Version>1.10.00.001</Version>
+        <Version>1.10.01.001</Version>
         <Authors>Peter Jannesen</Authors>
         <RepositoryUrl>https://github.com/jannesen/Jannesen.Library.Task</RepositoryUrl>
     </PropertyGroup>
