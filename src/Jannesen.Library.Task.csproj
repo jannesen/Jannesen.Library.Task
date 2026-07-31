@@ -13,7 +13,7 @@
         <IsTrimmable>True</IsTrimmable>
         <IsAotCompatible>True</IsAotCompatible>
 
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
         <Company>Jannesen B.V.</Company>
         <Version>1.10.01.001</Version>
