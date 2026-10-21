@@ -68,14 +68,19 @@ namespace Jannesen.Library.Tasks
                 _waiting.Add(waitTask);
             }
 
-            using (ct.Register(() => {
-                                   lock(_queue) {
-                                       _waiting.Remove(waitTask);
-                                   }
-                                   if (!waitTask.TrySetCanceled(ct)) {
-                                        throw new InvalidOperationException("MessageQueue.Receive TrySetCanceled failed.");
-                                   }
-                               })) {
+            if (ct.CanBeCanceled) {
+                using (ct.Register(() => {
+                                       lock(_queue) {
+                                           _waiting.Remove(waitTask);
+                                       }
+                                       if (!waitTask.TrySetCanceled(ct)) {
+                                            throw new InvalidOperationException("MessageQueue.Receive TrySetCanceled failed.");
+                                       }
+                                   })) {
+                    return await waitTask.Task;
+                }
+            }
+            else {
                 return await waitTask.Task;
             }
         }

@@ -73,8 +73,9 @@ namespace Jannesen.Library.Tasks
             lock(this) {
                 ObjectDisposedException.ThrowIf(_queue == null, this);
 
-                if (ct.IsCancellationRequested)
+                if (ct.IsCancellationRequested) {
                    return Task.FromCanceled<TaskSingletonAutoLeave>(ct);
+            }
 
                 if (_count > 0) {
                     var taskCompletion = new TaskCompletionSource<TaskSingletonAutoLeave>();
