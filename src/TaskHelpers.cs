@@ -54,5 +54,19 @@ namespace Jannesen.Library.Tasks
                 }
             }
         }
+        public  static async    Task            WhenAllIgnoreErrors(Task?[] tasks)
+        {
+            ArgumentNullException.ThrowIfNull(tasks);
+
+            foreach(var task in tasks) {
+                if (task != null) {
+                    try {
+                        await task;
+                    }
+                    catch {
+                    }
+                }
+            }
+        }
     }
 }
